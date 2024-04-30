@@ -44,6 +44,26 @@ server.get('/api/dogs/:id', async (req, res) => {
 })
 
 // [POST]   /api/dogs     (C of CRUD, create new dog from JSON payload)
+server.post('/api/dogs', async (req, res) => {
+    try {
+        const { name, weight } = req.body
+        if (!name || !weight) {
+            res.status(422).json({
+                message: `Must provide name and weight`
+            })
+        } else {
+            const createdDog = await Dog.create({ name, weight })
+            res.status(201).json({
+                message: `Success creating a dog ${createdDog.name}`,
+                data: createdDog,
+            })
+        }
+    } catch(err) {
+        res.status(500).json({
+            message: `Error creating dog: ${err.message}`
+        })
+    }
+})
 // [PUT]    /api/dogs/:id (U of CRUD, update dog with :id using JSON payload)
 // [DELETE] /api/dogs/:id (D of CRUD, remove dog with :id)
 
